@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Diagnostics;
 using TestGame.Collision;
 using TestGame.Input;
+using TestGame.Interfaces;
 using TestGame.world;
 
 namespace TestGame
@@ -17,9 +19,6 @@ namespace TestGame
         private Texture2D texture, blokTexture;
         Hero hero;
         Blok blok;
-        CollisionManager collisionManager;
-      
-
 
         public Game1()
         {
@@ -32,7 +31,6 @@ namespace TestGame
         {
             // TODO: Add your initialization logic here
 
-            collisionManager = new CollisionManager();
 
             base.Initialize();
         }
@@ -41,22 +39,20 @@ namespace TestGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            texture = Content.Load<Texture2D>("spritesheetvolt_run");
+            texture = Content.Load<Texture2D>("thief");
             blokTexture = Content.Load<Texture2D>("blok");
 
 
             InitialzeGameObjects();
             // TODO: use this.Content to load your game content here
+            hero.getTileRect(blok.CollisionRectangle);
         }
 
         private void InitialzeGameObjects()
         {          
             hero = new Hero(texture, new KeyBoardReader());
-            blok = new Blok(blokTexture, new Vector2(300,50));
-           
+            blok = new Blok(blokTexture, new Vector2(300,250));
         }
-
-        public int counter { get; set; } = 0;
         protected override void Update(GameTime gameTime)
         {
             
@@ -68,8 +64,6 @@ namespace TestGame
             hero.Update(gameTime);
             blok.Update();
 
-            if (collisionManager.CheckCollision(hero.CollisionRectangle, blok.CollisionRectangle))
-                Debug.WriteLine(counter++);
 
             base.Update(gameTime);
         }
@@ -84,8 +78,8 @@ namespace TestGame
 
             _spriteBatch.Begin();
 
-            hero.Draw(_spriteBatch);
             blok.Draw(_spriteBatch);
+            hero.Draw(_spriteBatch);
            
 
             _spriteBatch.End();

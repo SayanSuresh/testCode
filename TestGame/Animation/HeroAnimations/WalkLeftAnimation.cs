@@ -18,12 +18,9 @@ namespace TestGame.Animation.HeroAnimations
             this.transform = transform;
             this.texture = texture;           
             _animatie = new Animatie();
-            _animatie.AddFrame(new AnimationFrame(new Rectangle(0, 0, 280, 385)));
-            _animatie.AddFrame(new AnimationFrame(new Rectangle(280, 0, 280, 385)));
-            _animatie.AddFrame(new AnimationFrame(new Rectangle(560, 0, 280, 385)));
-            _animatie.AddFrame(new AnimationFrame(new Rectangle(840, 0, 280, 385)));
-            _animatie.AddFrame(new AnimationFrame(new Rectangle(1120, 0, 280, 385)));
-
+            _animatie.AddFrame(new AnimationFrame(new Rectangle(0, 197, 48, 62)));
+            _animatie.AddFrame(new AnimationFrame(new Rectangle(48, 197, 48, 62)));
+            _animatie.AddFrame(new AnimationFrame(new Rectangle(96, 197, 48, 62)));
         }
 
         public Animatie Animatie
@@ -35,7 +32,7 @@ namespace TestGame.Animation.HeroAnimations
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, transform.Position, _animatie.CurrentFrame.SourceRectangle, Color.White, 0, new Vector2(0, 0), 0.5f, SpriteEffects.FlipHorizontally, 0);
+            spriteBatch.Draw(texture, transform.Position, _animatie.CurrentFrame.SourceRectangle, Color.White, 0, new Vector2(0, 0), 2f, SpriteEffects.None, 0);
         }
 
         public void Update(GameTime gameTime)

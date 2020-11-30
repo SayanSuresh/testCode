@@ -12,7 +12,7 @@ namespace TestGame.Commands
 
         public MoveToCommando()
         {
-            snelheid = new Vector2(1, 0);
+            snelheid = new Vector2(5, 5);
         }
       
         public void Execute(ITransform transform, Vector2 direction)

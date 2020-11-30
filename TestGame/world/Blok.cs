@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using TestGame.Interfaces;
 
@@ -13,11 +14,12 @@ namespace TestGame.world
         public Vector2 Positie { get; set; }
         public Rectangle CollisionRectangle { get ; set ; }
 
+        
         public Blok(Texture2D texture, Vector2 pos)
         {
             _texture = texture;
             Positie = pos;
-            CollisionRectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 128, 64);
+            CollisionRectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 100, 64);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -27,7 +29,6 @@ namespace TestGame.world
 
         public void Update()
         {
-
         }
     }
 }

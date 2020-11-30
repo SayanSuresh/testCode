@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Text;
 using TestGame.Animation;
 using TestGame.Animation.HeroAnimations;
+using TestGame.Collision;
 using TestGame.Commands;
 using TestGame.Input;
 using TestGame.Interfaces;
@@ -16,85 +17,101 @@ namespace TestGame
 {
     public class Hero :ITransform, ICollision
     {
-        private Texture2D heroTexture;
+        private ICollisionWithTiles collisionManager;
+        private Rectangle tileRectangle;
 
-        private Animatie animatie;       
-       
-        public Vector2 Position { get; set; }
-        public Rectangle CollisionRectangle { get ; set ; }
         private Rectangle _collisionRectangle;
+        public Rectangle CollisionRectangle { get; set; }
+        public Vector2 Position { get; set; }
 
-        private IInputReader inputReader;
-        private IInputReader mouseReader;
+        Texture2D heroTexture;
+        GameTime gameTime;
+        Vector2 velocity;
+        private bool jump = false;
+        const float gravity = 100;
+        float jumpspeed = 1500;
 
+        private IInputReader reader;
         private IGameCommand moveCommand;
-        private IGameCommand moveToCommand;
         IEntityAnimation walkRight, walkLeft, currentAnimation;
 
-       
-        public Hero(Texture2D texture, IInputReader reader)
-        {            
-            heroTexture = texture;
+        public Hero(Texture2D texture, IInputReader inputReader)
+        {
+            this.heroTexture = texture;
             walkRight = new WalkRightAnimation(texture, this);
             walkLeft = new WalkLeftAnimation(texture, this);
             currentAnimation = walkRight;
-            //animatie = new Animatie();
-            //animatie.AddFrame(new AnimationFrame(new Rectangle(0, 0, 280, 385)));
-            //animatie.AddFrame(new AnimationFrame(new Rectangle(280, 0, 280, 385)));
-            //animatie.AddFrame(new AnimationFrame(new Rectangle(560, 0, 280, 385)));
-            //animatie.AddFrame(new AnimationFrame(new Rectangle(840, 0, 280, 385)));
-            //animatie.AddFrame(new AnimationFrame(new Rectangle(1120, 0, 280, 385)));    
 
-
-            //Read input for my hero class
-            this.inputReader = reader;
-            mouseReader = new MouseReader();
-
+            //Read input for hero class
+            this.reader = inputReader;
             moveCommand = new MoveCommand();
-            moveToCommand = new MoveToCommando();
 
-            Position = new Vector2(0, 0);
-
-            _collisionRectangle = new Rectangle((int)Position.X, (int)Position.Y, 280, 385);
-
+            _collisionRectangle = new Rectangle((int)Position.X, (int)Position.Y, 48, 62);
+            collisionManager = new CollisionManager();
         }
 
         public void Update(GameTime gameTime)
         {
+            var direction = reader.ReadInput();
+            this.gameTime = gameTime;
+            if (direction.X != 0 || direction.Y != 0)
+                //animatie.Update(gameTime);
+                currentAnimation.Update(this.gameTime);
+            move(direction);
 
-            var direction = inputReader.ReadInput();
-
-            MoveHorizontal(direction);
-         
-            if(inputReader.ReadFollower())
-                Move(mouseReader.ReadInput());
-
-
-            //animatie.Update(gameTime);
-            currentAnimation.Update(gameTime);
-
+            //_direction = collisionManager.CheckCollision(CollisionRectangle, blokRectangle, _direction);
             _collisionRectangle.X = (int)Position.X;
+            _collisionRectangle.Y = (int)Position.Y;
             CollisionRectangle = _collisionRectangle;
-
-
         }
 
-        private void MoveHorizontal(Vector2 _direction)
+        public void getTileRect(Rectangle collisionRectangle)
+        {
+            this.tileRectangle = collisionRectangle;
+        }
+
+        private void move(Vector2 _direction)
         {
             if (_direction.X == -1)
                 currentAnimation = walkLeft;
-            else if(_direction.X == 1)
+            else if (_direction.X == 1)
                 currentAnimation = walkRight;
 
-            moveCommand.Execute(this, _direction);
-        }    
+            // jumping movement
+            if (_direction.Y == -1 && jump)
+            {
+                velocity.Y = -jumpspeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                jump = false;
+            }
 
-       
+            if (!jump)
+                velocity.Y += gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            else
+                velocity.Y = 0;
+
+            Position += velocity;
+
+            jump = Position.Y >= 200;
+
+            //if (jump)
+            //{
+            //    Position = new Vector2(Position.X, 300);
+            //    if (_direction.X == -1)
+            //        Position = new Vector2(Position.X, 300);
+            //    else if (_direction.X == 1)
+            //        Position = new Vector2(Position.X, 300);
+            //}
+
+            _direction = collisionManager.CheckCollision(CollisionRectangle, this.tileRectangle, _direction, velocity);
+
+            moveCommand.Execute(this, _direction);
+        }
+
+
 
         private void Move(Vector2 mouse) 
         {
-            moveToCommand.Execute(this, mouse);
-
+           this.moveCommand.Execute(this, mouse);
         }
 
    
