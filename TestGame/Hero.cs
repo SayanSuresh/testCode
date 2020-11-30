@@ -28,8 +28,8 @@ namespace TestGame
         GameTime gameTime;
         Vector2 velocity;
         private bool jump = false;
-        const float gravity = 100;
-        float jumpspeed = 1500;
+        private float gravity = 100;
+        float jumpspeed = 1200;
 
         private IInputReader reader;
         private IGameCommand moveCommand;
@@ -92,16 +92,26 @@ namespace TestGame
             Position += velocity;
 
             jump = Position.Y >= 200;
+            int i = 1;
+            if (jump && collisionManager.isCollisie())
+            {
+                //Position = new Vector2(Position.X, Position.Y);
+                
 
-            //if (jump)
-            //{
-            //    Position = new Vector2(Position.X, 300);
-            //    if (_direction.X == -1)
-            //        Position = new Vector2(Position.X, 300);
-            //    else if (_direction.X == 1)
-            //        Position = new Vector2(Position.X, 300);
-            //}
-
+                if (collisionManager.CollisionTopOf())
+                {
+                    gravity = 0;
+                    Position = new Vector2(Position.X, 150);
+                }
+                
+                //if (_direction.X == -1)
+                //    Position = new Vector2(Position.X, 200);
+                //else if (_direction.X == 1)
+                //    Position = new Vector2(Position.X, 200);
+                Debug.WriteLine(i++);
+            }
+            else 
+                gravity = 100;
             _direction = collisionManager.CheckCollision(CollisionRectangle, this.tileRectangle, _direction, velocity);
 
             moveCommand.Execute(this, _direction);

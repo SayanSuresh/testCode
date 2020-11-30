@@ -11,5 +11,12 @@ namespace TestGame.Interfaces
         public Rectangle PlayerRect { get; set; }
         public Rectangle TileRect { get; set; }
         public Vector2 StopDirection { get; set; }
+
+        public bool isCollisie();
+
+        public bool CollisionTopOf();
+        public bool CollisionBottomOf();
+        public bool CollisionLeftOf();
+        public bool CollisionRightOf();
     }
 }
