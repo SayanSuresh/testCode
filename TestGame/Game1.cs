@@ -51,7 +51,7 @@ namespace TestGame
         private void InitialzeGameObjects()
         {          
             hero = new Hero(texture, new KeyBoardReader());
-            blok = new Blok(blokTexture, new Vector2(300,250));
+            blok = new Blok(blokTexture, new Vector2(300,200));
         }
         protected override void Update(GameTime gameTime)
         {

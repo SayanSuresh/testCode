@@ -24,7 +24,7 @@ namespace TestGame.Collision
             tileRect = rect2;
             stopDirection = new Vector2(0, 0);
             playerRect.X += (int)direction.X * 8;
-            playerRect.Y += (int)direction.Y * 108;
+            playerRect.Y += (int)direction.Y * 8;
 
             //tileRect.Height += (int)direction.Y * (int)Velocity.Y;
 

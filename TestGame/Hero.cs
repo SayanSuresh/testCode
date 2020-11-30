@@ -29,11 +29,15 @@ namespace TestGame
         Vector2 velocity;
         private bool jump = false;
         private float gravity = 100;
-        float jumpspeed = 1200;
+        //float jumpspeed = 1200;
 
         private IInputReader reader;
         private IGameCommand moveCommand;
         IEntityAnimation walkRight, walkLeft, currentAnimation;
+
+        bool jumping; //Is the character jumping?
+        float startY, jumpspeed = 0; //startY to tell us //where it lands, jumpspeed to see how fast it jumps
+
 
         public Hero(Texture2D texture, IInputReader inputReader)
         {
@@ -46,8 +50,13 @@ namespace TestGame
             this.reader = inputReader;
             moveCommand = new MoveCommand();
 
-            _collisionRectangle = new Rectangle((int)Position.X, (int)Position.Y, 48, 62);
+            Position = new Vector2(0, 200);
+            _collisionRectangle = new Rectangle((int)Position.X, (int)Position.Y, 65, 110);
             collisionManager = new CollisionManager();
+
+            startY = Position.Y;//Starting position
+            jumping = false;//Init jumping to false
+            jumpspeed = 0;//Default no speed
         }
 
         public void Update(GameTime gameTime)
@@ -69,7 +78,7 @@ namespace TestGame
         {
             this.tileRectangle = collisionRectangle;
         }
-
+        bool bla = true;
         private void move(Vector2 _direction)
         {
             if (_direction.X == -1)
@@ -77,41 +86,59 @@ namespace TestGame
             else if (_direction.X == 1)
                 currentAnimation = walkRight;
 
-            // jumping movement
-            if (_direction.Y == -1 && jump)
-            {
-                velocity.Y = -jumpspeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                jump = false;
-            }
+            //jumping movement
 
-            if (!jump)
-                velocity.Y += gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            else
-                velocity.Y = 0;
-
-            Position += velocity;
-
-            jump = Position.Y >= 200;
-            int i = 1;
             if (jump && collisionManager.isCollisie())
             {
                 //Position = new Vector2(Position.X, Position.Y);
-                
+                jump = false;
 
                 if (collisionManager.CollisionTopOf())
                 {
-                    gravity = 0;
-                    Position = new Vector2(Position.X, 150);
+                    //Position = new Vector2(Position.X, Position.Y);
                 }
-                
+                //if (!collisionManager.CollisionTopOf())
+
+
                 //if (_direction.X == -1)
                 //    Position = new Vector2(Position.X, 200);
                 //else if (_direction.X == 1)
                 //    Position = new Vector2(Position.X, 200);
-                Debug.WriteLine(i++);
             }
-            else 
-                gravity = 100;
+
+            int i = 0;
+
+            if (jumping)
+            {
+                //if (!collisionManager.CollisionTopOf())
+                Position += new Vector2(0,jumpspeed);//Making it go up
+                jumpspeed += 1;//Some math (explained later)
+
+                if (collisionManager.CollisionTopOf())
+                {
+                    i++;
+                    Position = new Vector2(collisionManager.PlayerRect.X, collisionManager.PlayerRect.Y);//Then set it on
+                    jumping = false;
+                    Debug.WriteLine(i);
+                }
+
+
+                if (Position.Y >= startY)
+                //If it's farther than ground
+                {
+                    //Position = new Vector2(collisionManager.PlayerRect.X, startY);//Then set it on
+                    jumping = false;
+                }
+            }
+            else
+            {
+                if (_direction.Y == -1)
+                {
+                    jumping = true;
+                    jumpspeed = -14;//Give it upward thrust
+                }
+            }
+
             _direction = collisionManager.CheckCollision(CollisionRectangle, this.tileRectangle, _direction, velocity);
 
             moveCommand.Execute(this, _direction);
