@@ -1,0 +1,42 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Game1
+{
+    abstract public class Tile
+    {
+        protected Texture2D texture;
+
+        private Rectangle rectangle;
+        public Rectangle Rectangle
+        {
+            get { return rectangle; }
+            protected set { rectangle = value; }
+        }
+
+        private  static ContentManager content;
+        public static ContentManager Content
+        {
+            protected get { return content; }
+            set { content = value; }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, Rectangle, Color.White);
+        }
+    }
+
+    class CollisionTiles : Tile
+    {
+        public CollisionTiles(int i, Rectangle newRectangle)
+        {
+            texture = Content.Load<Texture2D>("Levels/Level1/tile" + i);
+            this.Rectangle = newRectangle;
+        }
+    }
+}
