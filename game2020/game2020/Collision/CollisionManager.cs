@@ -54,24 +54,24 @@ namespace game2020.Collision
 
         public void Collision(Rectangle playerRec, Rectangle newRectangle, int xOffset, int yOffcet)
         {
-            if (collisionhelper.CollisionTop(playerRec, newRectangle))
+            if (collisionhelper.CollisionTopOf(playerRec, newRectangle))
             {
                 _collisionRectangle.Y = newRectangle.Y - _collisionRectangle.Height;
                 velocity.Y = 0f;
                 HasJumed = false;
             }
 
-            if (collisionhelper.CollisionLeft(playerRec, newRectangle))
+            if (collisionhelper.CollisionLeftOf(playerRec, newRectangle))
             {
                 Position = new Vector2(newRectangle.X - _collisionRectangle.Width - 2, Position.Y);
             }
 
-            if (collisionhelper.CollisionRight(playerRec, newRectangle))
+            if (collisionhelper.CollisionRightOf(playerRec, newRectangle))
             {
                 Position = new Vector2(newRectangle.X + _collisionRectangle.Width + 2, Position.Y);
             }
 
-            if (collisionhelper.CollisionBottom(playerRec, newRectangle))
+            if (collisionhelper.CollisionBottomOf(playerRec, newRectangle))
             {
                 velocity.Y = 1f;
             }

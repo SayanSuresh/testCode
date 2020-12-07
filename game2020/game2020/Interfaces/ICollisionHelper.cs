@@ -7,9 +7,9 @@ namespace RefactoringCol
 {
     public interface ICollisionHelper
     {
-        public bool CollisionTop(Rectangle rect1, Rectangle rect2);
-        public bool CollisionBottom(Rectangle rect1, Rectangle rect2);
-        public bool CollisionLeft(Rectangle rect1, Rectangle rect2);
-        public bool CollisionRight(Rectangle rect1, Rectangle rect2);
+        public bool CollisionTopOf(Rectangle rect1, Rectangle rect2);
+        public bool CollisionBottomOf(Rectangle rect1, Rectangle rect2);
+        public bool CollisionLeftOf(Rectangle rect1, Rectangle rect2);
+        public bool CollisionRightOf(Rectangle rect1, Rectangle rect2);
     }
 }
